@@ -1,263 +1,130 @@
 <template>
-  <div class="home-container">
-    <!-- 侧边栏：笔记列表 -->
-    <div class="sidebar">
-      <div class="sidebar-header">
-        <h1>记事本</h1>
-        <el-button type="primary" @click="handleCreateNote">新建笔记</el-button>
+  <div class="flex flex-col h-screen">
+    <!-- Header -->
+    <header class="flex items-center justify-between px-10 py-5">
+      <div class="flex items-center">
+        <img src="/images/logo.svg" alt="Logo" class="h-11" />
       </div>
-      
-      <div class="search-box">
-        <el-input
-          v-model="searchQuery"
-          placeholder="搜索笔记"
-          prefix-icon="el-icon-search"
-        />
+      <div class="flex items-center space-x-6">
+        <LanguageSwitcher />
+        <button class="text-sm font-medium text-gray-700 hover:text-gray-900">Login</button>
       </div>
-      
-      <div class="notes-list">
-        <h2>置顶笔记</h2>
-        <div class="note-item" v-for="note in filteredPinnedNotes" :key="note.id" @click="handleOpenNote(note.id)">
-          <h3>{{ note.title }}</h3>
-          <p class="note-preview">{{ note.content.substring(0, 50) }}...</p>
-          <p class="note-meta">{{ formatDate(note.updatedAt) }}</p>
+    </header>
+
+    <!-- Main Content -->
+    <main class="flex flex-1 px-2">
+      <!-- Left Sidebar -->
+      <aside
+        class="w-72 bg-white bg-opacity-20 border-r rounded-[12px] border-gray-200 p-4 mr-2 overflow-y-auto shadow">
+        <div class="flex items-center justify-between mb-4">
+          <h2 class="text-lg font-semibold text-gray-900">{{ t('allNotes') }}</h2>
+          <span class="text-sm text-gray-500">1 note</span>
         </div>
-        
-        <h2>所有笔记</h2>
-        <div class="note-item" v-for="note in filteredUnpinnedNotes" :key="note.id" @click="handleOpenNote(note.id)">
-          <h3>{{ note.title }}</h3>
-          <p class="note-preview">{{ note.content.substring(0, 50) }}...</p>
-          <p class="note-meta">{{ formatDate(note.updatedAt) }}</p>
+
+        <button
+          class="w-full bg-green-500 hover:bg-green-600 text-white font-medium py-2 px-4 rounded-lg flex items-center justify-center space-x-2 mb-6">
+          <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4v16m8-8H4" />
+          </svg>
+          <span>{{ t('createNote') }}</span>
+        </button>
+
+        <!-- Note List -->
+        <div class="space-y-3">
+          <div class="border border-gray-200 rounded-lg p-3 hover:shadow-sm active:bg-gray-100">
+            <div class="text-sm font-medium text-gray-900">{{ t('noteTitle') }}</div>
+            <div class="text-xs text-gray-500 mt-1">Last synced: 2028/02/22</div>
+          </div>
         </div>
-      </div>
-    </div>
-    
-    <!-- 主内容区：笔记编辑 -->
-    <div class="main-content">
-      <div v-if="!currentNote" class="empty-state">
-        <el-empty description="选择一个笔记或创建新笔记" />
-      </div>
-      <div v-else class="note-editor">
-        <el-input
-          v-model="currentNote.title"
-          class="note-title"
-          placeholder="笔记标题"
-          @blur="handleUpdateNote"
-        />
-        <el-input
-          v-model="currentNote.content"
-          type="textarea"
-          class="note-content"
-          placeholder="笔记内容"
-          @blur="handleUpdateNote"
-        />
-        <div class="note-actions">
-          <el-button @click="handlePinNote">
-            {{ currentNote.isPinned ? '取消置顶' : '置顶' }}
-          </el-button>
-          <el-button type="danger" @click="handleDeleteNote">删除笔记</el-button>
+
+        <!-- Additional Features -->
+        <div class="mt-8">
+          <h3 class="text-xs font-semibold text-gray-500 uppercase tracking-wider mb-3">{{ t('additionalFeatures') }}</h3>
+
+          <div class="bg-white border border-gray-200 rounded-lg p-3 mb-3">
+            <div class="flex items-start space-x-2">
+              <svg class="w-5 h-5 text-blue-500 mt-0.5" fill="currentColor" viewBox="0 0 24 24">
+                <path d="M12 2L2 7l10 5 10-5-10-5zM2 17l10 5 10-5M2 12l10 5 10-5" />
+              </svg>
+              <div>
+                <div class="text-sm font-medium text-gray-900">AI Edit</div>
+                <div class="text-xs text-gray-500 mt-0.5">An AI assistant that helps you write and polish your notes.
+                </div>
+                <button class="text-xs text-blue-600 hover:text-blue-800 mt-1">apply</button>
+              </div>
+            </div>
+          </div>
+
+          <div class="bg-white border border-gray-200 rounded-lg p-3">
+            <div class="flex items-start space-x-2">
+              <svg class="w-5 h-5 text-green-500 mt-0.5" fill="currentColor" viewBox="0 0 24 24">
+                <path
+                  d="M19 3H5c-1.1 0-2 .9-2 2v14c0 1.1.9 2 2 2h14c1.1 0 2-.9 2-2V5c0-1.1-.9-2-2-2zm-5 14H7v-2h7v2zm3-4H7v-2h10v2zm0-4H7V7h10v2z" />
+              </svg>
+              <div>
+                <div class="text-sm font-medium text-gray-900">Attach images and files</div>
+                <div class="text-xs text-gray-500 mt-0.5">Attach images, PDFs, and other types of files to your notes.
+                </div>
+                <button class="text-xs text-blue-600 hover:text-blue-800 mt-1">apply</button>
+              </div>
+            </div>
+          </div>
         </div>
+      </aside>
+
+      <!-- Right Editor -->
+      <div class="flex-1 flex flex-col bg-white border-r border-gray-200 shadow">
+        <!-- Editor Content -->
+        <div class="flex-1 overflow-y-auto p-8">
+          <div ref="editor" class="min-h-full">
+            
+          </div>
+        </div>
+
       </div>
-    </div>
+    </main>
+
+    <!-- Footer -->
+    <footer class="border-t border-gray-200 p-3 bg-gray-50">
+      <div class="text-xs text-gray-500 text-center" v-html="t('footerText', [
+        `<a href='#' class='text-blue-600 hover:underline'>${t('termsOfService')}</a>`,
+        `<a href='#' class='text-blue-600 hover:underline'>${t('privacyPolicy')}</a>`
+      ])"></div>
+    </footer>
   </div>
 </template>
 
 <script setup lang="ts">
-import { ref, computed, onMounted } from 'vue'
-import { useNoteStore } from '../stores/note'
-import type { Note } from '../stores/note'
-const noteStore = useNoteStore()
+import { ref, onMounted } from 'vue'
+import { useI18n } from 'vue-i18n'
+import Quill from 'quill'
+import LanguageSwitcher from '../components/LanguageSwitcher.vue'
+import 'quill/dist/quill.snow.css'
 
-const searchQuery = ref('')
-const currentNote = ref<Note | null>(null)
+const { t } = useI18n()
+const editor = ref<HTMLElement | null>(null)
+const quill = ref<Quill | null>(null)
 
-// 计算属性：过滤后的置顶笔记
-const filteredPinnedNotes = computed(() => {
-  if (!searchQuery.value) {
-    return noteStore.pinnedNotes
-  }
-  return noteStore.pinnedNotes.filter(note => 
-    note.title.toLowerCase().includes(searchQuery.value.toLowerCase()) ||
-    note.content.toLowerCase().includes(searchQuery.value.toLowerCase())
-  )
-})
-
-// 计算属性：过滤后的非置顶笔记
-const filteredUnpinnedNotes = computed(() => {
-  if (!searchQuery.value) {
-    return noteStore.unpinnedNotes
-  }
-  return noteStore.unpinnedNotes.filter(note => 
-    note.title.toLowerCase().includes(searchQuery.value.toLowerCase()) ||
-    note.content.toLowerCase().includes(searchQuery.value.toLowerCase())
-  )
-})
-
-// 格式化日期
-const formatDate = (date: Date) => {
-  return new Date(date).toLocaleString()
-}
-
-// 处理创建新笔记
-const handleCreateNote = async () => {
-  const newNote = await noteStore.createNote({
-    title: '新笔记',
-    content: '',
-    isPinned: false,
-    category: '默认',
-    tags: [],
-    isEncrypted: false
-  })
-  if (newNote) {
-    currentNote.value = newNote
-  }
-}
-
-// 处理打开笔记
-const handleOpenNote = async (id: string) => {
-  await noteStore.fetchNote(id)
-  currentNote.value = noteStore.currentNote
-}
-
-// 处理更新笔记
-const handleUpdateNote = async () => {
-  if (currentNote.value) {
-    await noteStore.updateNote(currentNote.value.id, {
-      title: currentNote.value.title,
-      content: currentNote.value.content
+onMounted(() => {
+  if (editor.value) {
+    quill.value = new Quill(editor.value, {
+      theme: 'snow',
+      placeholder: t('emptyState')
     })
   }
-}
-
-// 处理置顶/取消置顶笔记
-const handlePinNote = async () => {
-  if (currentNote.value) {
-    await noteStore.updateNote(currentNote.value.id, {
-      isPinned: !currentNote.value.isPinned
-    })
-  }
-}
-
-// 处理删除笔记
-const handleDeleteNote = async () => {
-  if (currentNote.value) {
-    const success = await noteStore.deleteNote(currentNote.value.id)
-    if (success) {
-      currentNote.value = null
-    }
-  }
-}
-
-// 组件挂载时获取笔记列表
-onMounted(async () => {
-  await noteStore.fetchNotes()
 })
 </script>
 
 <style scoped>
-.home-container {
-  display: flex;
-  height: 100vh;
-  overflow: hidden;
-}
-
-.sidebar {
-  width: 300px;
-  background-color: #f5f5f5;
-  border-right: 1px solid #e0e0e0;
-  padding: 20px;
-  overflow-y: auto;
-}
-
-.sidebar-header {
-  margin-bottom: 20px;
-}
-
-.sidebar-header h1 {
-  font-size: 24px;
-  margin-bottom: 10px;
-}
-
-.search-box {
-  margin-bottom: 20px;
-}
-
-.notes-list {
-  margin-top: 20px;
-}
-
-.notes-list h2 {
+/* Custom styles for Quill editor */
+:deep(.ql-container) {
   font-size: 16px;
-  margin-bottom: 10px;
-  color: #666;
-}
-
-.note-item {
-  padding: 15px;
-  background-color: #fff;
-  border-radius: 8px;
-  margin-bottom: 10px;
-  cursor: pointer;
-  transition: all 0.3s ease;
-}
-
-.note-item:hover {
-  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
-  transform: translateY(-2px);
-}
-
-.note-item h3 {
-  font-size: 16px;
-  margin-bottom: 5px;
-  color: #333;
-}
-
-.note-preview {
-  font-size: 14px;
-  color: #666;
-  margin-bottom: 5px;
-  white-space: nowrap;
-  overflow: hidden;
-  text-overflow: ellipsis;
-}
-
-.note-meta {
-  font-size: 12px;
-  color: #999;
-}
-
-.main-content {
-  flex: 1;
-  padding: 20px;
-  overflow-y: auto;
-}
-
-.empty-state {
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  height: 100%;
-}
-
-.note-editor {
-  max-width: 800px;
-  margin: 0 auto;
-}
-
-.note-title {
-  font-size: 24px;
-  margin-bottom: 20px;
-}
-
-.note-content {
   min-height: 400px;
-  font-size: 16px;
-  line-height: 1.6;
 }
 
-.note-actions {
-  margin-top: 20px;
-  display: flex;
-  gap: 10px;
+:deep(.ql-editor h1) {
+  font-size: 2rem;
+  font-weight: 600;
+  margin-bottom: 1rem;
 }
 </style>
