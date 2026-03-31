@@ -43,5 +43,29 @@ export default {
   serverStatus: 'Server is running normally',
   termsOfService: 'Terms of Service',
   privacyPolicy: 'Privacy Policy',
-  footerText: 'By using the product, you agree to our {0} and read our {1}.'
+  footerText: 'By using the product, you agree to our {0} and read our {1}.',
+  login: {
+    title: 'Login',
+    subtitle: 'Welcome back, please log in to your account',
+    usernamePassword: 'Username & Password',
+    phone: 'Phone',
+    username: 'Username',
+    usernamePlaceholder: 'Please enter username',
+    password: 'Password',
+    passwordPlaceholder: 'Please enter password',
+    rememberMe: 'Remember me',
+    forgotPassword: 'Forgot password?',
+    verificationCode: 'Verification code',
+    getCode: 'Get code',
+    phonePlaceholder: 'Please enter phone number',
+    phoneLoginNote: 'Phone login is temporarily unavailable',
+    loginButton: 'Login',
+    loggingIn: 'Logging in...',
+    dontHaveAccount: 'Don\'t have an account?',
+    register: 'Register',
+    validationError: 'Please fill in all required fields',
+    phoneLoginDisabled: 'Phone login is temporarily unavailable',
+    success: 'Login successful',
+    failed: 'Login failed'
+  }
 }

@@ -2,12 +2,15 @@ import express from 'express'
 import cors from 'cors'
 import helmet from 'helmet'
 import morgan from 'morgan'
+import dotenv from 'dotenv'
+import connectDB from './config/database'
+import usersRouter from './routes/users'
 
-// 路由导入（将来会添加）
-// import notesRouter from './routes/notes'
-// import usersRouter from './routes/users'
+dotenv.config()
 
 const app = express()
+
+connectDB()
 
 // 中间件配置
 app.use(cors())
@@ -16,9 +19,8 @@ app.use(morgan('dev'))
 app.use(express.json())
 app.use(express.urlencoded({ extended: true }))
 
-// 路由配置（将来会添加）
-// app.use('/api/notes', notesRouter)
-// app.use('/api/users', usersRouter)
+// 路由配置
+app.use('/api/users', usersRouter)
 
 // 健康检查路由
 app.get('/health', (req, res) => {

@@ -43,5 +43,29 @@ export default {
   serverStatus: '服务运行正常',
   termsOfService: '服务条款',
   privacyPolicy: '隐私政策',
-  footerText: '使用本产品即表示您同意我们的 {0} 并阅读我们的 {1}。'
+  footerText: '使用本产品即表示您同意我们的 {0} 并阅读我们的 {1}。',
+  login: {
+    title: '登录',
+    subtitle: '欢迎回来，请登录你的账户',
+    usernamePassword: '用户名密码',
+    phone: '手机号',
+    username: '用户名',
+    usernamePlaceholder: '请输入用户名',
+    password: '密码',
+    passwordPlaceholder: '请输入密码',
+    rememberMe: '记住我',
+    forgotPassword: '忘记密码？',
+    verificationCode: '验证码',
+    getCode: '获取验证码',
+    phonePlaceholder: '请输入手机号',
+    phoneLoginNote: '手机号登录功能暂未开放',
+    loginButton: '登录',
+    loggingIn: '登录中...',
+    dontHaveAccount: '还没有账户？',
+    register: '注册',
+    validationError: '请填写所有必填字段',
+    phoneLoginDisabled: '手机号登录功能暂未开放',
+    success: '登录成功',
+    failed: '登录失败'
+  }
 }

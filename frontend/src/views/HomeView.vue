@@ -7,7 +7,7 @@
       </div>
       <div class="flex items-center space-x-6">
         <LanguageSwitcher />
-        <button class="text-sm font-medium text-gray-700 hover:text-gray-900">Login</button>
+        <button class="text-sm font-medium text-gray-700 hover:text-gray-900" @click="navigateToLogin">{{ t('login.loginButton') }}</button>
       </div>
     </header>
 
@@ -97,13 +97,19 @@
 <script setup lang="ts">
 import { ref, onMounted } from 'vue'
 import { useI18n } from 'vue-i18n'
+import { useRouter } from 'vue-router'
 import Quill from 'quill'
 import LanguageSwitcher from '../components/LanguageSwitcher.vue'
 import 'quill/dist/quill.snow.css'
 
 const { t } = useI18n()
+const router = useRouter()
 const editor = ref<HTMLElement | null>(null)
 const quill = ref<Quill | null>(null)
+
+const navigateToLogin = () => {
+  router.push('/login')
+}
 
 onMounted(() => {
   if (editor.value) {
