@@ -44,6 +44,12 @@ export default {
   termsOfService: '服务条款',
   privacyPolicy: '隐私政策',
   footerText: '使用本产品即表示您同意我们的 {0} 并阅读我们的 {1}。',
+  notes: '条笔记',
+  untitled: '无标题',
+  noNotes: '暂无笔记，点击上方按钮创建',
+  saving: '保存中',
+  saved: '已保存',
+  logout: '退出登录',
   login: {
     title: '登录',
     subtitle: '欢迎回来，请登录你的账户',

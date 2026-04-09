@@ -24,7 +24,9 @@ api.interceptors.request.use(
 api.interceptors.response.use(
   (response) => response,
   (error) => {
-    if (error.response?.status === 401) {
+    // 只有在已经登录的情况下才重定向到登录页面
+    // 登录请求的 401 错误应该让调用者处理，以便显示错误信息
+    if (error.response?.status === 401 && error.config?.url !== '/users/login') {
       localStorage.removeItem('token')
       localStorage.removeItem('user')
       window.location.href = '/login'

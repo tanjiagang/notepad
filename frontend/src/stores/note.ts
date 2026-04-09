@@ -1,16 +1,5 @@
 import { defineStore } from 'pinia'
-
-export interface Note {
-  id: string
-  title: string
-  content: string
-  createdAt: Date
-  updatedAt: Date
-  isPinned: boolean
-  category: string
-  tags: string[]
-  isEncrypted: boolean
-}
+import { getNotes, createNote, updateNote, deleteNote, type Note } from '../api/note'
 
 export const useNoteStore = defineStore('note', {
   state: () => ({
@@ -35,47 +24,22 @@ export const useNoteStore = defineStore('note', {
       this.loading = true
       this.error = null
       try {
-        // 这里将来会替换为API调用
-        // 暂时使用模拟数据
-        const mockNotes: Note[] = [
-          {
-            id: '1',
-            title: '测试笔记 1',
-            content: '这是测试笔记 1 的内容',
-            createdAt: new Date(),
-            updatedAt: new Date(),
-            isPinned: true,
-            category: '工作',
-            tags: ['测试', '工作'],
-            isEncrypted: false
-          },
-          {
-            id: '2',
-            title: '测试笔记 2',
-            content: '这是测试笔记 2 的内容',
-            createdAt: new Date(),
-            updatedAt: new Date(),
-            isPinned: false,
-            category: '生活',
-            tags: ['测试', '生活'],
-            isEncrypted: false
-          }
-        ]
-        this.notes = mockNotes
+        const notes = await getNotes()
+        this.notes = notes
       } catch (error) {
         this.error = '获取笔记失败'
         console.error('Error fetching notes:', error)
+        this.notes = []
       } finally {
         this.loading = false
       }
     },
-    async fetchNote(id: string) {
+    
+    async fetchNote(_id: string) {
       this.loading = true
       this.error = null
       try {
-        // 这里将来会替换为API调用
-        // 暂时从本地状态中查找
-        const note = this.notes.find(note => note.id === id)
+        const note = await getNotes().then(notes => notes.find(n => n._id === _id))
         if (note) {
           this.currentNote = note
         } else {
@@ -88,20 +52,23 @@ export const useNoteStore = defineStore('note', {
         this.loading = false
       }
     },
-    async createNote(note: Omit<Note, 'id' | 'createdAt' | 'updatedAt'>) {
+    
+    async createNote(note: Omit<Note, '_id' | 'createdAt' | 'updatedAt' | 'user_id' | 'filePath'>) {
       this.loading = true
       this.error = null
       try {
-        // 这里将来会替换为API调用
-        // 暂时创建本地笔记
-        const newNote: Note = {
-          ...note,
-          id: Date.now().toString(),
-          createdAt: new Date(),
-          updatedAt: new Date()
-        }
+        const newNote = await createNote({
+          title: note.title,
+          content: note.content,
+          isPinned: note.isPinned,
+          category: note.category,
+          tags: note.tags,
+          isEncrypted: note.isEncrypted
+        })
+        
         this.notes.push(newNote)
         this.currentNote = newNote
+        
         return newNote
       } catch (error) {
         this.error = '创建笔记失败'
@@ -111,28 +78,22 @@ export const useNoteStore = defineStore('note', {
         this.loading = false
       }
     },
-    async updateNote(id: string, updates: Partial<Note>) {
+    
+    async updateNote(_id: string, updates: Partial<Note>) {
       this.loading = true
       this.error = null
       try {
-        // 这里将来会替换为API调用
-        // 暂时更新本地笔记
-        const index = this.notes.findIndex(note => note.id === id)
+        const updatedNote = await updateNote(_id, updates)
+        
+        const index = this.notes.findIndex(note => note._id === _id)
         if (index !== -1) {
-          const updatedNote = {
-            ...this.notes[index],
-            ...updates,
-            updatedAt: new Date()
-          } as Note
           this.notes[index] = updatedNote
-          if (this.currentNote && this.currentNote.id === id) {
+          if (this.currentNote && this.currentNote._id === _id) {
             this.currentNote = updatedNote
           }
-          return updatedNote
-        } else {
-          this.error = '笔记不存在'
-          return null
         }
+        
+        return updatedNote
       } catch (error) {
         this.error = '更新笔记失败'
         console.error('Error updating note:', error)
@@ -141,23 +102,22 @@ export const useNoteStore = defineStore('note', {
         this.loading = false
       }
     },
-    async deleteNote(id: string) {
+    
+    async deleteNote(_id: string) {
       this.loading = true
       this.error = null
       try {
-        // 这里将来会替换为API调用
-        // 暂时从本地状态中删除
-        const index = this.notes.findIndex(note => note.id === id)
+        await deleteNote(_id)
+        
+        const index = this.notes.findIndex(note => note._id === _id)
         if (index !== -1) {
           this.notes.splice(index, 1)
-          if (this.currentNote && this.currentNote.id === id) {
+          if (this.currentNote && this.currentNote._id === _id) {
             this.currentNote = null
           }
-          return true
-        } else {
-          this.error = '笔记不存在'
-          return false
         }
+        
+        return true
       } catch (error) {
         this.error = '删除笔记失败'
         console.error('Error deleting note:', error)
@@ -165,6 +125,12 @@ export const useNoteStore = defineStore('note', {
       } finally {
         this.loading = false
       }
+    },
+    
+    // Clear notes when user logs out
+    clearNotes() {
+      this.notes = []
+      this.currentNote = null
     }
   }
 })

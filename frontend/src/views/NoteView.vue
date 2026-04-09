@@ -34,11 +34,11 @@ const router = useRouter()
 const route = useRoute()
 const noteStore = useNoteStore()
 
-const noteId = computed(() => route.params.id as string)
+const note_id = computed(() => route.params._id as string)
 const note = computed(() => noteStore.currentNote)
 
 // 格式化日期
-const formatDate = (date: Date) => {
+const formatDate = (date: string | Date) => {
   return new Date(date).toLocaleString()
 }
 
@@ -57,7 +57,7 @@ const handleEdit = () => {
 // 处理删除笔记
 const handleDelete = async () => {
   if (note.value) {
-    const success = await noteStore.deleteNote(note.value.id)
+    const success = await noteStore.deleteNote(note.value._id)
     if (success) {
       router.push('/')
     }
@@ -66,7 +66,7 @@ const handleDelete = async () => {
 
 // 组件挂载时获取笔记详情
 onMounted(async () => {
-  await noteStore.fetchNote(noteId.value)
+  await noteStore.fetchNote(note_id.value)
 })
 </script>
 

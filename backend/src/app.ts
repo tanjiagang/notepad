@@ -5,6 +5,7 @@ import morgan from 'morgan'
 import dotenv from 'dotenv'
 import connectDB from './config/database'
 import usersRouter from './routes/users'
+import notesRouter from './routes/notes'
 
 dotenv.config()
 
@@ -21,6 +22,7 @@ app.use(express.urlencoded({ extended: true }))
 
 // 路由配置
 app.use('/api/users', usersRouter)
+app.use('/api/notes', notesRouter)
 
 // 健康检查路由
 app.get('/health', (req, res) => {

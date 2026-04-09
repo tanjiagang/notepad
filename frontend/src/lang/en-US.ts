@@ -44,6 +44,12 @@ export default {
   termsOfService: 'Terms of Service',
   privacyPolicy: 'Privacy Policy',
   footerText: 'By using the product, you agree to our {0} and read our {1}.',
+  notes: 'notes',
+  untitled: 'Untitled',
+  noNotes: 'No notes yet, click the button above to create',
+  saving: 'Saving',
+  saved: 'Saved',
+  logout: 'Logout',
   login: {
     title: 'Login',
     subtitle: 'Welcome back, please log in to your account',

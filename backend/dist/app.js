@@ -7,19 +7,22 @@ const express_1 = __importDefault(require("express"));
 const cors_1 = __importDefault(require("cors"));
 const helmet_1 = __importDefault(require("helmet"));
 const morgan_1 = __importDefault(require("morgan"));
-// 路由导入（将来会添加）
-// import notesRouter from './routes/notes'
-// import usersRouter from './routes/users'
+const dotenv_1 = __importDefault(require("dotenv"));
+const database_1 = __importDefault(require("./config/database"));
+const users_1 = __importDefault(require("./routes/users"));
+const notes_1 = __importDefault(require("./routes/notes"));
+dotenv_1.default.config();
 const app = (0, express_1.default)();
+(0, database_1.default)();
 // 中间件配置
 app.use((0, cors_1.default)());
 app.use((0, helmet_1.default)());
 app.use((0, morgan_1.default)('dev'));
 app.use(express_1.default.json());
 app.use(express_1.default.urlencoded({ extended: true }));
-// 路由配置（将来会添加）
-// app.use('/api/notes', notesRouter)
-// app.use('/api/users', usersRouter)
+// 路由配置
+app.use('/api/users', users_1.default);
+app.use('/api/notes', notes_1.default);
 // 健康检查路由
 app.get('/health', (req, res) => {
     res.status(200).json({ status: 'ok', message: '服务运行正常' });

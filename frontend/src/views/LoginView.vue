@@ -46,7 +46,7 @@
               type="text"
               required
               class="appearance-none relative block w-full px-3 py-2 border border-gray-300 placeholder-gray-500 text-gray-900 rounded-md focus:outline-none focus:ring-green-500 focus:border-green-500 focus:z-10 sm:text-sm"
-              placeholder="{{ t('login.usernamePlaceholder') }}"
+              :placeholder="t('login.usernamePlaceholder')"
               v-model="username"
             >
           </div>
@@ -59,7 +59,7 @@
               type="password"
               required
               class="appearance-none relative block w-full px-3 py-2 border border-gray-300 placeholder-gray-500 text-gray-900 rounded-md focus:outline-none focus:ring-green-500 focus:border-green-500 focus:z-10 sm:text-sm"
-              placeholder="{{ t('login.passwordPlaceholder') }}"
+              :placeholder="t('login.passwordPlaceholder')"
               v-model="password"
             >
           </div>
@@ -91,7 +91,7 @@
               name="phone"
               type="tel"
               class="appearance-none relative block w-full px-3 py-2 border border-gray-300 placeholder-gray-500 text-gray-900 rounded-md focus:outline-none focus:ring-green-500 focus:border-green-500 focus:z-10 sm:text-sm"
-              placeholder="{{ t('login.phonePlaceholder') }}"
+              :placeholder="t('login.phonePlaceholder')"
               v-model="phone"
               disabled
             >
@@ -103,7 +103,7 @@
               name="verification-code"
               type="text"
               class="appearance-none relative block flex-1 px-3 py-2 border border-gray-300 placeholder-gray-500 text-gray-900 rounded-md focus:outline-none focus:ring-green-500 focus:border-green-500 focus:z-10 sm:text-sm"
-              placeholder="{{ t('login.verificationCode') }}"
+              :placeholder="t('login.verificationCode')"
               disabled
             >
             <button
