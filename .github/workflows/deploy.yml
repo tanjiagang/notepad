@@ -21,13 +21,13 @@ jobs:
     - name: Build backend
       run: |
         cd backend
-        npm ci
+        npm install
         npm run build
 
     - name: Build frontend
       run: |
         cd frontend
-        npm ci
+        npm install
         npm run build
 
     - name: Deploy via SSH
@@ -39,15 +39,15 @@ jobs:
         port: 22
         debug: true
         script: |
-          cd /var/www/wwwroot/notepad
+          cd /www/wwwroot/notepad
           git pull origin development
 
           cd backend
-          npm ci
+          npm install
           npm run build
 
           cd ../frontend
-          npm ci
+          npm install
           npm run build
 
           pm2 restart notepad-backend || pm2 start backend/dist/index.js --name notepad-backend
