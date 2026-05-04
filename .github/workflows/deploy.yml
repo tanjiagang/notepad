@@ -50,4 +50,4 @@ jobs:
           npm ci
           npm run build
 
-          pm2 restart notepad-api || pm2 start backend/dist/index.js --name notepad-api
+          pm2 restart notepad-backend || pm2 start backend/dist/index.js --name notepad-backend
