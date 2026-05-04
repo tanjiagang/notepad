@@ -1,49 +1,53 @@
-name: Deploy to Server
+name: Deploy to Aliyun Server
 
 on:
   push:
     branches:
-      - main
-      - master
       - development
 
 jobs:
   deploy:
     runs-on: ubuntu-latest
-    
+
     steps:
-      - name: Checkout code
-        uses: actions/checkout@v4
+    - name: Checkout code
+      uses: actions/checkout@v4
 
-      - name: Setup Node.js
-        uses: actions/setup-node@v4
-        with:
-          node-version: '20'
+    - name: Set up Node.js
+      uses: actions/setup-node@v4
+      with:
+        node-version: '20'
 
-      - name: Install backend dependencies and build
-        run: |
+    - name: Build backend
+      run: |
+        cd backend
+        npm ci
+        npm run build
+
+    - name: Build frontend
+      run: |
+        cd frontend
+        npm ci
+        npm run build
+
+    - name: Deploy via SSH
+      uses: appleboy/ssh-action@v1.0.3
+      with:
+        host: 39.104.28.195
+        username: root
+        key: ${{ secrets.SERVER_SSH_KEY }}
+        port: 22
+        debug: true
+        script: |
+          cd /var/www/wwwroot/notepad
+          git pull origin development
+
           cd backend
-          npm install
+          npm ci
           npm run build
 
-      - name: Install frontend dependencies and build
-        run: |
-          cd frontend
-          npm install
+          cd ../frontend
+          npm ci
           npm run build
 
-      - name: Deploy to Server via SSH
-        uses: easingthemes/ssh-deploy@v4
-        env:
-          SSH_PRIVATE_KEY: ${{ secrets.SSH_PRIVATE_KEY }}
-          REMOTE_HOST: ${{ secrets.REMOTE_HOST }}
-          REMOTE_USER: ${{ secrets.REMOTE_USER }}
-          REMOTE_PORT: ${{ secrets.REMOTE_PORT }}
-          SOURCE: "backend/dist/, frontend/dist/"
-          TARGET: "/www/wwwroot/notepad/"
-          SCRIPT_AFTER: |
-            cd /www/wwwroot/notepad/backend
-            npm install --production
-            pm2 restart notepad-backend
-            pm2 save
-            nginx -s reload
+          pm2 restart notepad-api || pm2 start backend/dist/index.js --name notepad-api
